@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- Vue JS -->
+    <script src="vue.js"></script>
+    <script src="script.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+        <h1 class = "d-flex justify-content-center welcome mt-2" >Number Guessing Game</h1>
+        <!-- Button trigger modal -->
+        <br>
+        <div class="container" id="app">
+            <ol>
+                <li>Each player gets 3 chances to guess</li>
+                <li>Number range is between 1 - 10</li>
+                <li>You can reset the number after 3 wrong answers</li>
+            </ol>
+            <div class="container">
+                <h3>Input your number here</h3>
+                
+                <input type="number" v-model="number" id="input" class="form-control" placeholder="1, 2, 3, ...." onkeyup="cekInput()" required disabled>
+                
+                <!-- <br>
+                <p>Input Number : {{ number }}</p>
+                <br>
+                <p>Generated Number : {{ generated_number }}</p> -->
+
+
+                <br>
+                <div class="alert alert-danger" role="alert">
+                    Number of tries : {{ tries }}
+                </div>
+                <span v-if="correct == 0">
+                    <button class="btn btn-primary" @click="cek" id="btnCheck">Check Number</button>
+                </span>
+                <span v-else-if="correct == null">
+                    <button class="btn btn-primary" @click="startGame" onclick="startGame()" id="btnStart" >Start Game</button>
+                </span>
+                <span v-else-if="correct == 1  || correct == -1">
+                    <button class="btn btn-danger" @click="startOver">Start Over!</button>
+                </span>
+                
+                <br>
+                <br>
+                <div v-show="correct">
+                    <span v-if="correct == 1">
+                        <h4 class="text-success">You're Right :)</h4>
+                        <h6 class="text-info">The number is {{ generated_number }} </h6>
+                    </span>
+                    <span v-else-if="correct == 0 || correct == -1">
+                        <h4 class="text-danger">You're Wrong :( </h4>
+                        <h6 class="text-info">The number is {{ generated_number }} </h6>
+                    </span>
+                </div>
+            </div>
+            <footer class="page-footer font-small blue fixed-bottom">
+                <div class="d-flex justify-content-center">
+                    <p>{{footer}}</p>
+                </div>
+            </footer>
+        </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  </body>
+
+  <script>
+      new Vue({
+        el:"#app",
+        data: {
+            number:null,
+            generated_number:0,
+            correct:null,
+            tries:0,
+            terms:false,
+            footer:"Daniel Axcella Kurniawan | 180709738 | Kelas A"
+        },
+        methods: {
+            cek() {
+                if(this.number!=null) {
+                    this.tries++;
+                    if (this.tries<3 && this.number == this.generated_number) {
+                        // kalo bener kan pasti kurang dari 3x dan nilai nya sama pas dibandingkan
+                        this.correct=1;
+                    }
+                    else if (this.tries<3 && this.number != this.generated_number) {
+                        // kalo nilainya salah tebak dan kurang dari 3x percobaan
+                        this.correct=0;
+                    }
+                    else if (this.tries==3) {
+                        // udah nggak bisa coba lagi
+                        this.correct=-1;
+                    }
+                }
+                else if(this.number == null) {
+                    alert("There is no input !");
+                }
+            },
+            startOver() {
+                do {
+                    this.generated_number = Math.ceil(Math.random()*10);
+                }
+                while(this.generated_number == 0)
+                this.number=null;
+                this.correct=0;
+                this.correct_number=null;
+                this.tries=0;
+            },
+            startGame() {
+                do {
+                    this.generated_number = Math.ceil(Math.random()*10);
+                }
+                while(this.generated_number == 0)
+                this.correct = 0;
+            }
+        },
+        computed: {
+            isDisabled: function(){
+                if(this.number == null) {
+                    return !this.terms;
+                }
+                else if(this.number != null){
+                    return this.terms;
+                }
+            }
+        },
+      });
+  </script>
+</html>
