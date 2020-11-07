@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+    <head >
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <script src="vue.js"></script>
+        <!-- <link rel="stylesheet" href="style.css"> -->
+        <title>TGS8_A_9738</title>
+    </head>
+    <body>
+        <div class="d-flex p-4 justify-content-center" id="app">
+            
+            <!-- todo list -->
+            <div class="rounded shadow-lg bg-white overflow-auto m-2 p-4" style="max-width: 75%; width: 75%; height: 400px;">
+                <div v-show="array_exist">
+                    <span v-for="(item, index) in all_data" :key="index">
+                        <div class="shadow-sm p-3 bg-white rounded mb-3">
+                            <div class="row justify-content-between">
+                                <div class="col-4 ">
+                                    <span v-if="item.penting == 'Penting'">
+                                        <p class="border border-danger w-50 text-center rounded p-1 text-danger font-weight-bold">{{item.penting}}</p>
+                                    </span>
+                                    <span v-if="item.penting == 'Tidak Penting'">
+                                        <p class="border border-warning w-75 text-center rounded p-1 text-warning font-weight-bold">{{item.penting}}</p>
+                                    </span>
+                                    <span v-if="item.penting == 'Biasa'">
+                                        <p class="border border-success w-50 text-center rounded p-1 text-success font-weight-bold">{{item.penting}}</p>
+                                    </span>
+                                </div>
+                                <div class="col-2 ">
+                                    <button class="btn btn-outline-danger rounded-circle" @click="removeTodo(index)">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                                <!-- <div class="alert alert-success w-50 border border-danger">{{index}}</div> -->
+                            <h3>{{ item.nama_tugas }}</h3>
+                            <p>{{ item.catatan }}</p>
+                        </div>
+                    </span>
+                </div>
+            </div>
+
+            <!-- todo input -->
+            <div class="rounded shadow-lg bg-white m-2 w-75 p-4">
+                <label for="nama_tugas" class="font-weight-bold">Apa yang ingin dikerjakan ?</label>
+                <input type="text" id="nama_tugas" class="form-control mb-3" placeholder="Menyapu, mandi, makan, ...." v-model="nama_tugas_input">
+
+                <label for="penting" class="font-weight-bold">Penting kah ?</label>
+                <select id="penting" v-model="penting_input" class="form-control mb-3">
+                    <option value="Penting">Penting</option>
+                    <option value="Tidak Penting">Tidak Penting</option>
+                    <option value="Biasa">Biasa</option>
+                </select>
+
+                <label for="textarea" class="font-weight-bold" >Ada catatan ?</label>
+                <textarea name="textarea" id="textarea" cols="3" placeholder="Deadline, deskripsi tugas, ..." rows="3" class="form-control mb-3" v-model="catatan_input"></textarea>
+
+                <span v-if="all_data.length == 0">
+                    <button class="btn btn-outline-secondary" @click="reset" disabled>Reset</button>
+                </span>
+                <span v-else>
+                    <button class="btn btn-secondary" @click="reset">Reset</button>
+                </span>
+                <span v-if=" penting_input == '' || catatan_input == '' || nama_tugas_input == ''">
+                    <button class="btn btn-outline-success" @click="addTodo" disabled>Submit</button>
+                </span>
+                <span v-else>
+                    <button class="btn btn-success" @click="addTodo">Submit</button>
+                </span>
+            </div>
+            
+            <footer class="page-footer font-small blue fixed-bottom p-4">
+                <div class="d-flex justify-content-center">
+                    <p>{{nama}} | {{npm}} | {{kelas}}</p>
+                </div>
+            </footer>
+        </div>
+    
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    </body>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                nama:"Daniel Axcella Kurniawan",
+                npm:"180709738",
+                kelas:"Kelas A",
+                nama_tugas_input:"",
+                pilihan_penting:["Penting", "Tidak Penting","Biasa"],
+                penting_input:"",
+                catatan_input:"",
+                array_exist:null,
+                all_data: [],
+                verified: 0,
+            },
+            methods: {
+                addTodo() {
+                    this.array_exist = 1;
+                    this.all_data.push({
+                        nama_tugas: this.nama_tugas_input,
+                        penting: this.penting_input,
+                        catatan: this.catatan_input
+                    });
+                    this.nama_tugas_input = "";
+                    this.penting_input = "";
+                    this.catatan_input = "";
+                },
+                removeTodo(index) { 
+                    this.all_data.splice(index, 1);
+                },
+                reset() {
+                    this.all_data = [];
+                    this.array_exist = null;
+                },
+                length() {
+                    return this.all_data.length;
+                },
+            },
+        });
+    </script>
+</html>
